@@ -1,0 +1,106 @@
+---
+title: "Milestone 2 - Initial EDA"
+output: html_notebook
+---
+
+### Load and inspect data
+
+1.1 Load data set
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data_dir <- "/Users/johannalueneburg/Desktop/ESCP/Courses/Analytical Modeling in R/Group Project"
+```
+
+```{r}
+df <- read.csv("./data/NYPD_Arrest_Data__Year_to_Date_.csv")
+```
+
+1.2 Inspect data set
+
+```{r}
+df
+```
+
+```{r}
+summary(df)
+```
+
+```{r}
+str(df)
+```
+
+### Missing values
+
+2.1 check for missing values
+
+```{r}
+install.packages("naniar")
+install.packages("ggplot2")
+```
+
+```{r}
+library(naniar)
+library(ggplot2)
+```
+
+```{r}
+miss_summary <- naniar::miss_var_summary(df)
+print(miss_summary)
+```
+
+```{r}
+null_count <- sum(df == "(null)", na.rm = TRUE)
+print(null_count)
+```
+
+2.2 Replace "(null)" with NA for consistency
+
+```{r}
+# Replace by converting all columns to character
+for (col in colnames(df)) {
+  df[[col]] <- na_if(as.character(df[[col]]), "(null)")
+}
+
+# Convert columns back to original data types
+df <- type.convert(df, as.is = TRUE)
+```
+
+```{r}
+# Test replacement
+null_count <- sum(df == "(null)", na.rm = TRUE)
+print(null_count)
+```
+```{r}
+gg_miss_var(df)
+```
+```{r}
+miss_summary <- naniar::miss_var_summary(df) %>% 
+  filter(variable %in% 
+           c("PD_DESC", "OFNS_DESC", "KY_CD", "PD_CD", "LAW_CODE", "LAW_CAT_CD"))
+print(miss_summary)
+```
+
+```{r}
+rows_with_na <- sum(complete.cases(df) == FALSE)
+print(rows_with_na)
+```
+
+
+Out of the total 195,447 x 19 data points, 96 values are missing. Only 26 rows are affected by these missing values. Therefore, these rows will be removed from the dataset, anticipating no impact on the results of future analyses.
+
+```{r}
+df <- na.omit(df)
+```
+
+### Explore Variable Distribution
+
+3.1 
+
+```{r}
+
+```
+
